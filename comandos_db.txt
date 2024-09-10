@@ -1,0 +1,226 @@
+drop database if exists TECH_STORE;
+CREATE DATABASE TECH_STORE;
+USE TECH_STORE;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    user_type VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    stock INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE customers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(50) NOT NULL,
+    phone BIGINT NOT NULL,
+    address VARCHAR(100) NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_date DATE NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    customer_id INT NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+CREATE TABLE order_items (
+    product_id INT NOT NULL,
+    order_id INT NOT NULL,
+    quantity INT NOT NULL,
+    sale_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    PRIMARY KEY (product_id, order_id)
+);
+
+DELIMITER //
+
+CREATE TRIGGER update_product_stock
+AFTER INSERT ON order_items
+FOR EACH ROW
+BEGIN
+    UPDATE products
+    SET stock = stock - NEW.quantity
+    WHERE id = NEW.product_id;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER set_sale_price
+BEFORE INSERT ON order_items
+FOR EACH ROW
+BEGIN
+    DECLARE product_price DECIMAL(10, 2);
+
+    SELECT price INTO product_price
+    FROM products
+    WHERE id = NEW.product_id;
+
+    IF product_price IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Product price not found in the products table';
+    ELSE
+        SET NEW.sale_price = product_price;
+    END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE add_customer(
+    IN username VARCHAR(50),
+    IN password VARCHAR(255),
+    IN email VARCHAR(50),
+    IN phone BIGINT,
+    IN address VARCHAR(100)
+)
+BEGIN
+    DECLARE user_id INT;
+    DECLARE existing_email VARCHAR(50);
+
+    SELECT email INTO existing_email FROM customers WHERE email = email;
+
+    IF existing_email IS NULL THEN
+        INSERT INTO users (username, password, user_type)
+        VALUES (username, password, 'customer');
+
+        SELECT id INTO user_id FROM users
+        WHERE username = username AND password = password;
+
+        INSERT INTO customers (email, phone, address, user_id)
+        VALUES (email, phone, address, user_id);
+    ELSE
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Email already exists.';
+    END IF;
+END$$
+DELIMITER ;
+
+INSERT INTO products (name, stock, price) VALUES
+('Laptop', 100, 999.99),
+('Smartphone', 200, 499.99),
+('Tablet', 150, 299.99),
+('Desktop PC', 80, 1299.99),
+('Wireless Headphones', 120, 99.99),
+('External SSD', 250, 89.99),
+('Smart Watch', 180, 199.99),
+('Wireless Mouse', 400, 29.99),
+('Webcam', 300, 49.99),
+('Gaming Keyboard', 110, 99.99),
+('Portable Speaker', 200, 59.99),
+('Wireless Router', 100, 79.99),
+('Printer', 140, 149.99),
+('VR Headset', 70, 399.99),
+('Wireless Charger', 220, 24.99);
+
+CREATE VIEW customer_details AS
+SELECT u.username, c.email, c.phone, c.address
+FROM users u
+INNER JOIN customers c ON u.id = c.user_id
+ORDER BY u.id;
+
+DELIMITER //
+
+CREATE TRIGGER check_product_stock
+BEFORE INSERT ON order_items
+FOR EACH ROW
+BEGIN
+    DECLARE available_stock INT;
+
+    SELECT stock INTO available_stock
+    FROM products
+    WHERE id = NEW.product_id;
+
+    IF available_stock < NEW.quantity THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Insufficient product stock for the order';
+    END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE customer_orders(IN customer_id INT)
+BEGIN
+    SELECT
+        o.id AS order_id,
+        o.order_date,
+        p.name AS product_name,
+        oi.quantity,
+        oi.sale_price,
+        (oi.quantity * oi.sale_price) AS total
+    FROM
+        orders o
+    JOIN
+        order_items oi ON o.id = oi.order_id
+    JOIN
+        products p ON oi.product_id = p.id
+    WHERE
+        o.customer_id = customer_id;
+END //
+
+DELIMITER ;
+
+drop table if exists order_items;
+drop table if exists orders;
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_date DATE NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    customer_id INT NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES users(id)
+);
+CREATE TABLE order_items (
+    product_id INT NOT NULL,
+    order_id INT NOT NULL,
+    quantity INT NOT NULL,
+    sale_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    PRIMARY KEY (product_id, order_id)
+);
+
+drop trigger if exists set_sale_price;
+drop trigger if exists update_product_stock;
+
+DELIMITER //
+CREATE TRIGGER update_product_stock
+AFTER INSERT ON order_items
+FOR EACH ROW
+BEGIN
+    UPDATE products
+    SET stock = stock - NEW.quantity
+    WHERE id = NEW.product_id;
+    UPDATE orders
+    SET total_amount = total_amount + NEW.sale_price
+    WHERE id = NEW.order_id;
+END; //
+DELIMITER ;
+
+CREATE VIEW view_orders_items AS
+SELECT
+    o.id AS id,
+    o.order_date AS date,
+    p.name AS name,
+    oi.quantity AS quantity,
+    p.price AS price,
+    o.total_amount AS total
+FROM
+    orders o
+JOIN
+    order_items oi ON o.id = oi.order_id
+JOIN
+    products p ON oi.product_id = p.id;

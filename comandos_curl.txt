@@ -1,0 +1,49 @@
+REGISTRAR A UN CLIENTE 
+curl -d "{\"username\":\"Prueba\", \"contrasena\":\"Nintendo3ds\", \"contrasena_repetida\":\"Nintendo3ds\", \"email\":\"prueba@ucol.mx\", \"phone\": \"31326345\", \"address\": \"Av. Universidad 393\"}" -H "Content-Type: application/json" -X POST http://localhost:3000/register
+
+INICIAR SESION COMO CLIENTE
+curl -d "{\"username\":\"Prueba\", \"contrasena\":\"Nintendo3ds\"}" -H "Content-Type: application/json" -X POST http://localhost:3000/login
+
+MOSTRAR TODOS LOS PRODUCTOS
+curl -H "Content-Type: aplication/json" -H "Authorization: Bearer CAMBIA TU TOKEN AQUI ALV" http://localhost:3000/products
+
+BUSCAR PRODUCTOS
+curl -H "Content-Type: aplication/json" -H "Authorization: Bearer CAMBIA TU TOKEN AQUI ALV" http://localhost:3000/products/CAMBIA POR LO QUE QUIERES BUSCAR ALV
+
+INICIAR SESION ADMINISTRADOR
+curl -d "{\"username\":\"Humbertop\", \"contrasena\":\"VivaMQTT\"}" -H "Content-Type: application/json" -X POST http://localhost:3000/login
+
+AGREGAR PRODUCTOS
+curl -d "{\"nombre\":\"CUM\", \"precio\":\"0\", \"cantidad\": \"10000\"}" -H "Content-Type: application/json" -H "Authorization: Bearer CAMBIA TU TOKEN AQUI ALV" -X POST http://localhost:3000/productos
+
+COMANDO PARA PROBAR QUE NO DEJA REGISTRAR UN CLIENTE SI SE REPITE EL email
+curl -d "{\"username\":\"Prueba2\", \"contrasena\":\"Nintendo3ds2\", \"contrasena_repetida\":\"Nintendo3ds2\", \"email\":\"prueba@ucol.mx\", \"phone\": \"313263456\", \"address\": \"Av. Universidad 3932\"}" -H "Content-Type: application/json" -X POST http://localhost:3000/register
+
+COMANDO PARA PROBAR QUE NO DEJA REGISTRAR UN CLIENTE SI SE REPITE EL NOMBRE DE USUARIO
+curl -d "{\"username\":\"Prueba\", \"contrasena\":\"Nintendo3ds3\", \"contrasena_repetida\":\"Nintendo3ds3\", \"email\":\"prueba3@ucol.mx\", \"phone\": \"313263457\", \"address\": \"Av. Universidad 3933\"}" -H "Content-Type: application/json" -X POST http://localhost:3000/register
+
+MOSTRAR TODOS LOS CLIENTES
+curl -H "Content-Type: aplication/json" -H "Authorization: Bearer CAMBIA TU TOKEN AQUI ALV" http://localhost:3000/client
+
+curl -d "{\"column\":\"price", \"newValue\":\"100\", \"name\":\"Laptop\"}" -H "Content-Type: application/json" -H "Authorization: Bearer CAMBIA TU TOKEN AQUI ALV" -X PUT http://localhost:3000/orders
+
+CREAR UN PEDIDO
+curl -d "{\"fecha\":\"2024-05-29\", \"productos\":[{\"nombre\": \"adhesivo-universal\", \"cantidad\": 5}, {\"nombre\": \"pegamento-para-madera\", \"cantidad\": 5}]}" -H "Content-Type: application/json" -H "Authorization: Bearer CAMBIA TU TOKEN AQUI ALV" -X POST http://localhost:3000/pedidos
+
+curl -d "{\"order_date\":\"2024-05-29\", \"productos\":[{\"nombre\": \"adhesivo-universal\", \"cantidad\": 5}, {\"nombre\": \"pegamento-para-madera\", \"cantidad\": 5}]}" -H "Content-Type: application/json" -H "Authorization: Bearer CAMBIA TU TOKEN AQUI ALV" -X POST http://localhost:3000/pedidos
+
+
+curl -d "{\"order_date\":\"2024-05-29\", \"total_amount\":\"100\", \"customer_id\":\"1\"}" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRpZWdvMiIsInVzZXJJZCI6MSwidGlwbyI6ImFkbWluaXN0cmFkb3IiLCJpYXQiOjE3MTc1NTc3NjgsImV4cCI6MTcxODE2MjU2OH0.Mv332_G8OGKQCVq1aMQrcE_Me1d2G2RskjM6XsRu478" -X POST http://localhost:3000/orders
+curl -d "{\"product_id\":\"1\", \"order_id\":\"1\", \"quantity\":\"1\", \"sales_price\":\"100\"}" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRpZWdvMiIsInVzZXJJZCI6MSwidGlwbyI6ImFkbWluaXN0cmFkb3IiLCJpYXQiOjE3MTc1NTc3NjgsImV4cCI6MTcxODE2MjU2OH0.Mv332_G8OGKQCVq1aMQrcE_Me1d2G2RskjM6XsRu478" -X POST http://localhost:3000/orders
+
+
+LISTAR PEDIDOS
+curl -H "Content-Type: aplication/json" -H "Authorization: Bearer CAMBIA TU TOKEN AQUI ALV" http://localhost:3000/pedidos
+
+ACTUALIZAR CONFIGURACION DE LA BD
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'hanzeelSQL1234';
+FLUSH PRIVILEGES;
+
+
+curl -d "{\"name\":\"CUM\", \"stock\":\"500\", \"price\": \"10000\"}" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRpZWdvMiIsInVzZXJJZCI6MSwidGlwbyI6ImFkbWluaXN0cmFkb3IiLCJpYXQiOjE3MTc1NTc3NjgsImV4cCI6MTcxODE2MjU2OH0.Mv332_G8OGKQCVq1aMQrcE_Me1d2G2RskjM6XsRu478" -X POST http://localhost:3000/products
+curl -d "{\"username\":\"Diego2\", \"password\":\"123456789\"}" -H "Content-Type: application/json" -X POST http://localhost:3000/login

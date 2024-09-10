@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Estilo general */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Contenedor principal */
+        .container {
+            text-align: center;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #1f1f1f;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .lead {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        /* Botones */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #6200ea;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #3700b3;
+        }
+
+        .btn-lg {
+            font-size: 1.2em;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center my-5">
+        <h1 class="mb-4">TECH STORE</h1>
+        <h2>Presentamos la tienda del mañana</h2>
+        <p class="lead mb-4">Una tienda donde puedes comprar tecnología y más</p>
+        <a id="btn-login" href="../dom/loggin.html" class="btn btn-primary btn-lg mx-2">Iniciar sesión</a>
+        <a id="btn-signup" href="../dom/singUp.html" class="btn btn-primary btn-lg mx-2">Registrarme</a>
+    </div>
+</body>
+</html>

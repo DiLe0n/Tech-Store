@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Estilo general */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        /* Barra de navegación */
+        .nav-bar {
+            background-color: #1f1f1f;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .list-item {
+            margin-right: 20px;
+        }
+
+        .list-item a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px;
+        }
+
+        .list-item a:hover {
+            color: #bb86fc;
+        }
+
+        /* Contenido principal */
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #6200ea;
+            padding-bottom: 10px;
+        }
+
+        .pedidos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Estilo de los pedidos (si es necesario) */
+        .pedido-item {
+            background-color: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+        }
+
+        .pedido-item:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation bar section -->
+    <nav class="nav-bar">
+        <ul class="nav-list">
+            <li class="list-item"><a href="lobby.html">Productos</a></li>
+            <li class="list-item"><a href="shoppingCar.html">Carrito</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main content section -->
+    <main>
+        <h1>Mis pedidos</h1>
+        <div id="pedidos" class="pedidos"></div>
+    </main>
+
+    <!-- Include the JavaScript file for handling orders functionality -->
+    <script src="../jotaese/orders.js"></script>
+</body>
+</html>
